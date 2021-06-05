@@ -14,8 +14,28 @@
 
 
 (* ::Input:: *)
-(*nearbyValues=ToExpression@StringSplit[StringSplit[Last@StringSplit[input,"nearby tickets:"],"\n"],","];*)
+(*n=Length@rules;tickets=ToExpression@StringCases[input,t:Repeated[DigitCharacter..~~","|"\n",{n}]:>StringSplit[t,","]];*)
 
 
 (* ::Input:: *)
-(*Total[Pick[#,Not/@IntervalMemberQ[IntervalUnion@@Values@rules,#]]&@Flatten@nearbyValues]*)
+(*Total[Pick[#,Not/@IntervalMemberQ[IntervalUnion@@Values@rules,#]]&@Flatten@tickets]*)
+
+
+(* ::Subsection:: *)
+(*Part 2*)
+
+
+(* ::Input:: *)
+(*validTickets=Pick[#,And@@@IntervalMemberQ[IntervalUnion@@Values@rules,#]]&@tickets;*)
+
+
+(* ::Input:: *)
+(*possibilities=With[{i=#},Pick[Keys@rules,And@@@(IntervalMemberQ[#,#[[i]]&/@validTickets]&/@Values@rules)]]&/@Range@n;*)
+
+
+(* ::Input:: *)
+(*fields=ConstantArray["",n];Nest[With[{p=Position[#,{Repeated[_String,{Min@DeleteCases[Length/@#,0]}]}][[1,1]]},fields[[p]]=#[[p]][[1]];DeleteCases[ReplacePart[#,p->{}],#[[p]][[1]],{2}]]&,#,n]&@possibilities;*)
+
+
+(* ::Input:: *)
+(*Times@@Extract[First@tickets,Position[StringMatchQ[fields,"departure"~~___],True]]*)
