@@ -14,7 +14,8 @@
 
 
 (* ::Input:: *)
-(*takeBorder[img_]:={First@#,""<>StringPart[#,-1],Last@#,""<>StringPart[#,1]}&@StringSplit[img,"\n"]*)
+(*takeBorder[img_]:={First@#,""<>StringPart[#,-1],Last@#,""<>StringPart[#,1]}&@StringSplit[img,"\n"];*)
+(*f={#,StringReverse@#}&;*)
 
 
 (* ::Text:: *)
@@ -22,5 +23,14 @@
 
 
 (* ::Input:: *)
-(*borders=takeBorder/@tiles;*)
-(*Times@@ToExpression@ids[[Flatten@Position[Count[borders,#|StringReverse@#,{2}]&/@#&/@borders,a__/;Total@a==6]]]*)
+(*borders=takeBorder/@tiles;b=StringRiffle/@borders;*)
+(*c=Flatten/@(Position[StringContainsQ[b,Flatten@f@#],True]&/@borders);*)
+(*c=MapThread[Complement,{c,List/@Range@Length@c}](*connectivity of each tile*);*)
+
+
+(* ::Input:: *)
+(*{corners,edges}=Flatten@Position[c,{Repeated[_,#]}]&/@{2,3};*)
+
+
+(* ::Input:: *)
+(*Times@@ToExpression@ids[[corners]]*)
