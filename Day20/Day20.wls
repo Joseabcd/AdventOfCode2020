@@ -24,7 +24,7 @@
 
 (* ::Input:: *)
 (*borders=takeBorder/@tiles;b=StringRiffle/@borders;*)
-(*c=Flatten/@(Position[StringContainsQ[b,Flatten@f@#],True]&/@borders);*)
+(*c=Flatten/@(Position[StringContainsQ[b,f@#],True]&/@borders);*)
 (*c=MapThread[Complement,{c,List/@Range@Length@c}](*connectivity of each tile*);*)
 
 
