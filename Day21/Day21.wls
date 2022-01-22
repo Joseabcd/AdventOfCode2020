@@ -18,8 +18,16 @@
 
 
 (* ::Input:: *)
-(*Reap[NestWhile[DeleteCases[#,Sow@Select[Length@#==1&][#][[1,1]],{2}]&,(Intersection@@ingredients[[#]]&)/@m,Flatten@Values@#=!={}&]][[2,1]](*gives ingredients with allergen*);*)
+(*a=First/@Join@@Reap[NestWhile[DeleteCases[#,#[[1,1]]&@Sow@Select[Length@#==1&]@#,{2}]&,(Intersection@@ingredients[[#]]&)/@m,Flatten@Values@#=!={}&]][[2,1]];*)
 
 
 (* ::Input:: *)
-(*Total[Count[ingredients,#,{2}]&/@Complement[Flatten@ingredients,%]]*)
+(*Total[Count[ingredients,#,{2}]&/@Complement[Flatten@ingredients,Values@a]]*)
+
+
+(* ::Subsection:: *)
+(*Part 2*)
+
+
+(* ::Input:: *)
+(*StringRiffle[Values@KeySort@a,","]*)
