@@ -14,4 +14,8 @@
 
 
 (* ::Input:: *)
-(*Total[Reverse@Range@Max@decks*Flatten@NestWhile[{Append[RotateLeft@Last@#,#[[1,1]]],Rest@First@#}&@*SortBy[First],decks,FreeQ@{}]]*)
+(*playRound=With[{c=First/@#},MapAt[Flatten@*Append[Reverse@Sort@c],Rest/@#,Last@Ordering@c]]&;*)
+
+
+(* ::Input:: *)
+(*Total[Reverse@Range@Max@decks*Flatten@NestWhile[playRound,decks,FreeQ@{}]]*)
