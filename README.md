@@ -6,8 +6,7 @@ programmed using Wolfram Language (aka Mathematica).
 
 ### How?
 They're formatted as Wolfram Language Scripts so that they can be visualized and run without need of installing the Mathematica front end,
-by only installing the free interpreter (downloadable from [here](https://www.wolfram.com/wolframscript/)). The actual pieces of code
-appear in the scripts as comments wrapped between `(*...*)`, and below a headline delimiting each section. 
+by only installing the free interpreter (downloadable from [here](https://www.wolfram.com/wolframscript/)). 
 
-Each script can be run in a terminal by first making it executable (running `chmod +x filename.wls`) and then actually running it doing `./filename.wls < input.txt`,
-where `input.txt` is the file containing the puzzle input located within the same folder as the script.
+Each script can be run by first making it executable (running in a terminal `chmod +x filename.wls`), and then executing it simply by double-clicking 
+on it (or alternatively typing `./filename.wls` in a terminal), within a folder that contains both the script and a text file with the puzzle input named "input.txt". 

@@ -1,29 +1,24 @@
-#!/usr/bin/env wolframscript
+#!/usr/bin/env wolframscript -print all
 (* ::Package:: *)
 
-(* ::Input:: *)
-(*input=Import[NotebookDirectory[]<>"input.txt"];*)
+input=Import[If[$Notebooks,NotebookDirectory[],DirectoryName[$ScriptCommandLine[[1]]]]<>"input.txt"];
 
 
 (* ::Subsection:: *)
 (*Part 1*)
 
 
-(* ::Input:: *)
-(*p=25;*)
+p=25;
 
 
-(* ::Input:: *)
-(*list=ToExpression@StringSplit[input,"\n"];*)
+list=ToExpression@StringSplit[input,"\n"];
 
 
-(* ::Input:: *)
-(*m=list[[p+Position[BlockMap[MemberQ[Total/@Subsets[Most@#,{2}],Last@#]&,list,p+1,1],False,{1},1][[1,1]]]]*)
+m=list[[p+Position[BlockMap[MemberQ[Total/@Subsets[Most@#,{2}],Last@#]&,list,p+1,1],False,{1},1][[1,1]]]]
 
 
 (* ::Subsection:: *)
 (*Part 2*)
 
 
-(* ::Input:: *)
-(*Total[MinMax@@SequenceCases[list,s:{_,_,___}/;Total@s==m]]*)
+Total[MinMax@@SequenceCases[list,s:{_,_,___}/;Total@s==m]]

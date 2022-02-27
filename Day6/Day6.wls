@@ -1,21 +1,18 @@
-#!/usr/bin/env wolframscript
+#!/usr/bin/env wolframscript -print all
 (* ::Package:: *)
 
-(* ::Input:: *)
-(*input=Import[NotebookDirectory[]<>"input.txt"];*)
+input=Import[If[$Notebooks,NotebookDirectory[],DirectoryName[$ScriptCommandLine[[1]]]]<>"input.txt"];
 
 
 (* ::Subsection:: *)
 (*Part 1*)
 
 
-(* ::Input:: *)
-(*Total[CountDistinct/@Characters[StringJoin/@StringSplit[StringSplit[input,"\n\n"],"\n"]]]*)
+Total[CountDistinct/@Characters[StringJoin/@StringSplit[StringSplit[input,"\n\n"],"\n"]]]
 
 
 (* ::Subsection:: *)
 (*Part 2*)
 
 
-(* ::Input:: *)
-(*Total[Length/@(Intersection@@#&/@Characters[StringSplit[StringSplit[input,"\n\n"],"\n"]])]*)
+Total[Length/@(Intersection@@#&/@Characters[StringSplit[StringSplit[input,"\n\n"],"\n"]])]

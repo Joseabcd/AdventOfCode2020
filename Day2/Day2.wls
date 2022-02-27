@@ -1,25 +1,21 @@
-#!/usr/bin/env wolframscript
+#!/usr/bin/env wolframscript -print all
 (* ::Package:: *)
 
-(* ::Input:: *)
-(*input=Import[NotebookDirectory[]<>"input.txt"];*)
+input=Import[If[$Notebooks,NotebookDirectory[],DirectoryName[$ScriptCommandLine[[1]]]]<>"input.txt"];
 
 
-(* ::Input:: *)
-(*list=StringSplit[input,"\n"];*)
+list=StringSplit[input,"\n"];
 
 
 (* ::Subsection:: *)
 (*Part 1*)
 
 
-(* ::Input:: *)
-(*Count[Flatten@StringCases[list,l:NumberString~~"-"~~h:NumberString~~" "~~k:LetterCharacter~~":"~~" "~~p:LetterCharacter..:>Between[StringCount[p,k],ToExpression/@{l,h}]],True]*)
+Count[Flatten@StringCases[list,l:NumberString~~"-"~~h:NumberString~~" "~~k:LetterCharacter~~":"~~" "~~p:LetterCharacter..:>Between[StringCount[p,k],ToExpression/@{l,h}]],True]
 
 
 (* ::Subsection:: *)
 (*Part 2*)
 
 
-(* ::Input:: *)
-(*Count[Flatten@StringCases[list,i1:NumberString~~"-"~~i2:NumberString~~" "~~k:LetterCharacter~~":"~~" "~~p:LetterCharacter..:>Count[StringPart[p,ToExpression/@{i1,i2}],k]==1],True]*)
+Count[Flatten@StringCases[list,i1:NumberString~~"-"~~i2:NumberString~~" "~~k:LetterCharacter~~":"~~" "~~p:LetterCharacter..:>Count[StringPart[p,ToExpression/@{i1,i2}],k]==1],True]

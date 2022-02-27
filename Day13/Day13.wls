@@ -1,20 +1,17 @@
-#!/usr/bin/env wolframscript
+#!/usr/bin/env wolframscript -print all
 (* ::Package:: *)
 
-(* ::Input:: *)
-(*input=Import[NotebookDirectory[]<>"input.txt"];*)
+input=Import[If[$Notebooks,NotebookDirectory[],DirectoryName[$ScriptCommandLine[[1]]]]<>"input.txt"];
 
 
-(* ::Input:: *)
-(*{time,{buses,positions}}={First@#,{#[[#2]],#2}&[#,Flatten@Position[_Integer]@#]&@Rest@#}&@StringCases[input,{d:DigitCharacter..:>FromDigits@d,"x"}];*)
+{time,{buses,positions}}={First@#,{#[[#2]],#2}&[#,Flatten@Position[_Integer]@#]&@Rest@#}&@StringCases[input,{d:DigitCharacter..:>FromDigits@d,"x"}];
 
 
 (* ::Subsection:: *)
 (*Part 1*)
 
 
-(* ::Input:: *)
-(*buses[[#]]#2[[#]]&[First@Ordering@#,#]&[buses Ceiling[time/buses]-time]*)
+buses[[#]]#2[[#]]&[First@Ordering@#,#]&[buses Ceiling[time/buses]-time]
 
 
 (* ::Subsection:: *)
@@ -25,11 +22,11 @@
 (*Brute force*)
 
 
-(* ::Input:: *)
+(* ::Code:: *)
 (*{step,offset}={#2[[#]],positions[[#]]-1}&[Last@Ordering@#,#]&@buses;*)
 
 
-(* ::Input:: *)
+(* ::Code:: *)
 (*i=1;While[t=step*i;Union@Mod[t-offset+positions-1,buses]!={0},i+=1];t-offset*)
 
 
@@ -37,9 +34,7 @@
 (*Number theory approach*)
 
 
-(* ::Input:: *)
-(*m=LCM@@buses ;a=m Total[1/buses];b=m Total[(positions-1)/buses];*)
+m=LCM@@buses ;a=m Total[1/buses];b=m Total[(positions-1)/buses];
 
 
-(* ::Input:: *)
-(*Mod[-ExtendedGCD[a,m][[2,1]] b,m]*)
+Mod[-ExtendedGCD[a,m][[2,1]] b,m]
