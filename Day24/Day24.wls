@@ -14,4 +14,4 @@ d=StringCount[StringSplit[input],#]&/@{"se","sw","ne","nw",RegularExpression["(?
 
 
 (* ::Input::Initialization:: *)
-Count[Last/@Tally@Thread[{(+#-#2+#3+-#4)/2+#5-#6,(-#-#2+#3+#4)}&@@d],_?OddQ]
+Count[Last/@Tally@Thread[{(#-#2+#3-#4)/2+#5-#6,(#3+#4-#-#2)}&@@d],_?OddQ]
