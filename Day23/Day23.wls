@@ -9,9 +9,135 @@ input=Import[If[$Notebooks,NotebookDirectory[],DirectoryName[$ScriptCommandLine[
 circle= ToExpression@StringSplit[input,""];
 
 
+(* ::Input:: *)
+(*circle*)
+
+
 (* ::Subsection:: *)
 (*Part 1*)
 
 
 (* ::Input::Initialization:: *)
 ""<>ToString/@(Nest[RotateLeft[Insert[#2,Splice@#,1+Position[#2,Max[Cases[#2,n_/;n<First@#2]/.{{}->#2}]]]&@@TakeDrop[#,{2,4}]]&,circle,100]/.{{h___,1,t___}:>{t,h}})
+
+
+(* ::Subsection:: *)
+(*Part 2*)
+
+
+(* ::Text:: *)
+(*This solution needs rethinking: it takes almost 7 hours run on an M4 machine.*)
+
+
+plusDecl1=
+	FunctionDeclaration[
+		plus,
+		Typed[{"MachineInteger","MachineInteger","MachineInteger"}->"MachineInteger"]@
+		Function[
+			{a,b,n},
+			Mod[a+b,n,1]
+		]
+	];
+
+
+plusDecl2=
+	FunctionDeclaration[
+		plus,
+		Typed[{"MachineInteger","PackedArray"::["MachineInteger",1],"MachineInteger"}->"PackedArray"::["MachineInteger",1]]@
+		Function[
+			{a,b,n},
+			Mod[a+#,n,1]&/@b
+		]
+	];
+
+
+makeMoveDecl=
+	FunctionDeclaration[
+		makeMove,
+		Typed[{"PackedArray"::["MachineInteger",1],"MachineInteger"}->"ListVector"::["PackedArray"::["MachineInteger",1]]]@
+		Function[
+			{circle,currentPosition},
+			Module[
+				{destinationCup,pickUp,currentCup,n,pickUpPosition,destinationPosition,nextCircle,nextCurrentPosition},
+				
+				n=Length[circle];
+				
+				pickUp=circle[[plus[currentPosition,{1,2,3},n]]];
+				currentCup=circle[[currentPosition]];
+				
+				If[
+					MemberQ[pickUp,plus[currentCup,-1,n]],
+					If[
+						MemberQ[pickUp,plus[currentCup,-2,n]],
+						If[
+							MemberQ[pickUp,plus[currentCup,-3,n]],
+							destinationCup=plus[currentCup,-4,n],
+							destinationCup=plus[currentCup,-3,n]
+						],
+						destinationCup=plus[currentCup,-2,n]
+					],
+					destinationCup=plus[currentCup,-1,n]
+				];
+				
+				nextCircle=Array`NewPackedArray[TypeSpecifier["MachineInteger"],n];
+				destinationPosition=0;
+				Module[
+					{i=1,i0=1},
+					While[
+						i<=n,
+						Which[
+							circle[[i]]===destinationCup,
+							(
+								destinationPosition=i;
+								nextCircle[[Mod[i0,n,1]]]=circle[[i]];
+								i++;i0++;
+								nextCircle[[Mod[i0,n,1]]]=pickUp[[1]];
+								nextCircle[[plus[i0,1,n]]]=pickUp[[2]];
+								nextCircle[[plus[i0,2,n]]]=pickUp[[3]];
+								i0+=3;
+							),
+							
+							i===currentPosition,
+							(
+								nextCircle[[Mod[i0,n,1]]]=circle[[i]];
+								i+=4;i0++;
+							),
+							
+							True,
+							nextCircle[[Mod[i0,n,1]]]=circle[[i]];
+							i++;i0++;
+						];			
+					]
+				];
+				
+				nextCurrentPosition=
+					If[
+						destinationPosition>currentPosition,
+						plus[currentPosition,1,n],
+						plus[currentPosition,4,n]
+					];
+					
+				{nextCircle,{nextCurrentPosition}}
+			]
+		]
+	];
+
+
+playCompiled=
+	FunctionCompile[
+		{makeMoveDecl,plusDecl1,plusDecl2},
+		Function[
+			{Typed[circle,"PackedArray"::["MachineInteger",1]],Typed[currentPosition,"MachineInteger"],Typed[k,"MachineInteger"]},
+			Nest[makeMove[#[[1]],#[[2]][[1]]]&,{circle,{currentPosition}},k]
+		]
+	];
+
+
+res=playCompiled[Join[circle,Range[Max[circle]+1,1000000]],1,10000000];
+
+
+lastCircle=res[[1]];
+
+
+cupOnePosition=Position[lastCircle,1];
+Times@@Extract[lastCircle,Mod[Join[cupOnePosition+1,cupOnePosition+2],Length[lastCircle],1]]
