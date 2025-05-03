@@ -54,11 +54,15 @@ plusDecl2=
 makeMoveDecl=
 	FunctionDeclaration[
 		makeMove,
-		Typed[{"PackedArray"::["MachineInteger",1],"MachineInteger"}->"ListVector"::["PackedArray"::["MachineInteger",1]]]@
+		Typed[{"ListVector"::["PackedArray"::["MachineInteger",1]]}->"ListVector"::["PackedArray"::["MachineInteger",1]]]@
 		Function[
-			{circle,currentPosition},
+			initialState,
 			Module[
-				{destinationCup,pickUp,currentCup,n,pickUpPosition,destinationPosition,nextCircle,nextCurrentPosition},
+				{circle,currentPosition,destinationCup,pickUp,currentCup,n,pickUpPosition,destinationPosition,nextCircle,
+				nextCurrentPosition,nextState},
+				
+				circle=initialState[[1]];
+				currentPosition=initialState[[2]][[1]];
 				
 				n=Length[circle];
 				
@@ -117,7 +121,7 @@ makeMoveDecl=
 						plus[currentPosition,4,n]
 					];
 					
-				{nextCircle,{nextCurrentPosition}}
+				nextState={nextCircle,{nextCurrentPosition}}
 			]
 		]
 	];
@@ -127,17 +131,10 @@ playCompiled=
 	FunctionCompile[
 		{makeMoveDecl,plusDecl1,plusDecl2},
 		Function[
-			{Typed[circle,"PackedArray"::["MachineInteger",1]],Typed[currentPosition,"MachineInteger"],Typed[k,"MachineInteger"]},
-			Nest[makeMove[#[[1]],#[[2]][[1]]]&,{circle,{currentPosition}},k]
+			{Typed[circle,"PackedArray"::["MachineInteger",1]],Typed[currentPosition,"MachineInteger"],Typed[numberOfMoves,"MachineInteger"]},
+			Nest[makeMove,{circle,{currentPosition}},numberOfMoves]
 		]
 	];
 
 
-res=playCompiled[Join[circle,Range[Max[circle]+1,1000000]],1,10000000];
-
-
-lastCircle=res[[1]];
-
-
-cupOnePosition=Position[lastCircle,1];
-Times@@Extract[lastCircle,Mod[Join[cupOnePosition+1,cupOnePosition+2],Length[lastCircle],1]]
+playCompiled[Join[circle,Range[Max[circle]+1,1000000]],1,10000000]/.{{h___,1,t___},_}:>Times@@Take[{t,h},2]
